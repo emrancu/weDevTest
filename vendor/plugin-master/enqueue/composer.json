@@ -1,0 +1,34 @@
+{
+  "name": "plugin-master/enqueue",
+  "description": "The PluginMaster Enqueue Registerer for WordPress.",
+  "license": "MIT",
+  "homepage": "https://github.com/emrancu/PluginMaster-Enqueue",
+  "support": {
+    "issues": "https://github.com/emrancu/PluginMaster-Enqueue/issues",
+    "source": "https://github.com/emrancu/PluginMaster-Enqueue"
+  },
+  "authors": [
+    {
+      "name": "AL EMRAN",
+      "email": "emrancu1@gmail.com"
+    }
+  ],
+  "keywords": [
+    "Routing",
+    "WP Enqueue Registerer",
+    "WordPress Plugin Development framework"
+  ],
+  "autoload": {
+    "classmap": [],
+    "psr-4": {
+      "PluginMaster\\Enqueue\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+
+  }
+
