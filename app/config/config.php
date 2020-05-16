@@ -1,8 +1,13 @@
 <?php
 
 return [
-    "environment" => "production",
-    "app_name" => "Easy Plugin",
-    "api_version" => "WPDemo/v1"
+    "environment" => "local",
+    "app_name" => "PluginMaster",
+    "api_namespace" => "WeDevTest/v1",
+    "enqueue_version" => "1.0.0.1",
+    "data" => [
+        "name" => "EMRAN"
+    ]
 ];
+
 

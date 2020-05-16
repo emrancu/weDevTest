@@ -3,146 +3,80 @@
 namespace App\system\enqueue;
 
 
-use App\system\core\base\Enqueue;
+use App\system\core\Settings;
+use PluginMaster\Enqueue\Enqueue;
 
-class EnqueueRegister implements Enqueue
+class EnqueueRegister extends Enqueue
 {
-
-    public $plugin;
-    public $pluginRoot;
 
     public function __construct()
     {
-        $this->plugin = $GLOBALS['plugin_base'];
-        $this->pluginRoot = plugin_dir_path($this->plugin);
+        parent::__construct();
+        $this->plugin = Settings::$plugin_root;
+        $this->pluginRoot = Settings::$plugin_dir;
 
     }
 
+    /**
+     *
+     */
     public function initAsset()
     {
-        add_action('admin_enqueue_scripts', array($this, 'init'));
-    }
-
-    public function init($hook)
-    {
-        global $mainMenu;
-        $currentNav = urldecode(explode('page=', $_SERVER['REQUEST_URI'])[1]);
-
-        if ('toplevel_page_' . $mainMenu == $hook || strtolower($mainMenu) . '_page_' . $currentNav == $hook) {
-            enqueue_file($this);
+        if (is_admin()) {
+            add_action('admin_enqueue_scripts', array($this, 'init_admin_enqueue'));
+        } else {
+            add_action('wp_enqueue_scripts', array($this, 'init_front_enqueue'));
         }
+    }
 
-        if($hook == 'plugins.php'){
+    /**
+     * @param $hook
+     */
+    public function init_admin_enqueue($hook)
+    {
+        if ($hook == 'plugins.php') {
             $this->deActiveAction();
-       }
+        } else {
+            $currentURI = explode('page=', $_SERVER['REQUEST_URI']);
+            $currentNav = isset($currentURI[1]) ? urldecode($currentURI[1]) : '';
 
+            if ('toplevel_page_' . Settings::$main_menu === $hook || strtolower(Settings::$main_menu) . '_page_' . $currentNav == $hook) {
 
+                $enqueue = $this;
+                require_once Settings::$plugin_path . '/enqueue/adminEnqueue.php';
+            }
 
-    }
-
-
-    /**
-     * @param $handler
-     * @param $objectName
-     */
-    public function csrfToken($handler, $objectName)
-    {
-        wp_localize_script($handler, $objectName, array(
-            'root' => esc_url_raw(rest_url()),
-            'security' => wp_create_nonce('wp_rest')
-        ));
-    }
-
-
-    /**
-     * @param $path
-     * @param string $id
-     */
-    public function footerScriptCdn($path, $id = '')
-    {
-        $handler = $id ? $id : uniqid();
-        wp_enqueue_script($handler, $path, array(), '1.0.0', true);
-    }
-
-
-    /**
-     * @param $path
-     * @param string $id
-     */
-    public function footerScript($path, $id = '')
-    {
-        $handler = $id ? $id : uniqid();
-        $path = plugins_url($this->pluginRoot) . $path;
-        wp_enqueue_script($handler, $path, array(), '1.0.0'  , true);
+        }
     }
 
     /**
-     * @param $fileName
-     * @param int $port
+     *
      */
-    public function hotScript($fileName, $port = 8080)
+    private function deActiveAction()
     {
-        $handler = uniqid();
-        $path = 'http://localhost:' . $port . '/assets/' . $fileName;
-        wp_enqueue_script($handler, $path, array(), '1.0.0', true);
-    }
-
-
-    /**
-     * @param $path
-     * @param string $id
-     */
-    public function headerScriptCdn($path, $id = '')
-    {
-        $handler = $id ? $id : uniqid();
-        wp_enqueue_script($handler, $path, array(), '1.0.0', false);
-    }
-
-
-    /**
-     * @param $path
-     * @param string $id
-     */
-    public function headerScript($path, $id = '')
-    {
-        $handler = $id ? $id : uniqid();
-        $path = plugins_url($this->pluginRoot) . $path;
-        wp_enqueue_script($handler, $path, array(), '1.0.0', false);
-    }
-
-
-    /**
-     * @param $path
-     */
-    public function style($path)
-    {
-        $path = plugins_url($this->pluginRoot) . $path;
-        wp_enqueue_style(uniqid(), $path, array(), '1.0.0', 'all');
-    }
-
-
-    /**
-     * @param $path
-     */
-    public function styleCdn($path)
-    {
-        wp_enqueue_style(uniqid(), $path, array(), '1.0.0', 'all');
-    }
-
-    public function deActiveAction()
-    {
-
         add_filter('plugin_action_links_' . $this->plugin, [$this, 'deActiveActionData']);
+    }
+
+    /**
+     * @param $hook
+     */
+    public function init_front_enqueue($hook)
+    {
+        $enqueue = $this;
+        require_once Settings::$plugin_path . '/enqueue/frontEnqueue.php';
 
     }
 
 
+    /**
+     * @param $links
+     * @return mixed
+     */
     public function deActiveActionData($links)
     {
-        $data = file_get_contents(plugin_dir_path(__FILE__) . '../../../enqueue/deactiveAction.php');
+        $data = file_get_contents(Settings::$plugin_path . '/enqueue/deactiveAction.php');
         array_push($links, $data);
         return $links;
     }
-
 
 }

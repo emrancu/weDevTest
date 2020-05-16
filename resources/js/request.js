@@ -13,7 +13,7 @@ export function getRequest(url, loading = false, rootUrl = false, csrf = false) 
 
         let baseURL = '';
         if (rootUrl) {
-            baseURL = corsData.root + 'WPDemo/v1/';
+            baseURL = corsData.root + 'WeDevTest/v1/';
         }
 
         let options = {
@@ -63,23 +63,23 @@ export function postRequest(url, data, loading = false) {
             body: JSON.stringify(data)
         };
 
-        fetch(corsData.root + 'WPDemo/v1/' + url, options)
+        fetch(corsData.root + 'WeDevTest/v1/' + url, options)
             .then(response => {
-                    let responseData =  response.json() ;
-                    if(response.status === 200){
-                        webToast.Success({
-                            status: "Success",
-                            "message" : response.message ? response.message : "Successfully Completed",
-                        })
-                        resolve(response);
-                        return {status: 200}
-                    }
+                let responseData = response.json();
+                if (response.status === 200) {
+                    webToast.Success({
+                        status: "Success",
+                        "message": response.message ? response.message : "Successfully Completed",
+                    })
+                    resolve(response);
+                    return {status: 200}
+                }
 
-               return responseData
+                return responseData
 
             })
             .then((response) => {
-                if(response.status !== 200){
+                if (response.status !== 200) {
                     webToast.Danger({
                         status: 'Sorry !',
                         message: response.message ? response.message : "Something went wrong",
@@ -92,7 +92,7 @@ export function postRequest(url, data, loading = false) {
                     loader.fadeOut().remove()
                 }
 
-            }) ;
+            });
 
     });
 }

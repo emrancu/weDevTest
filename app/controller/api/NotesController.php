@@ -3,9 +3,8 @@
 namespace App\controller\api;
 
 use App\system\controller\Controller;
-use App\system\db\builder\DB;
 use App\system\request\Request;
-use App\system\Validator;
+use PluginMaster\DB\DB;
 
 
 class NotesController extends Controller
@@ -15,12 +14,12 @@ class NotesController extends Controller
     {
         $request = new Request();
 
-        Validator::execute($request, [
+        $request->validate([
             'note' => 'required',
         ]);
 
 
-        $insert = DB::table('demo_notes')->insert([
+        $insert = DB::table('demo_note')->insert([
             "note" => $request->note,
             "status" => 'active',
         ]);
@@ -31,7 +30,7 @@ class NotesController extends Controller
 
     function getNotes()
     {
-        $notes = DB::table('demo_notes')->orderBy('id', 'desc')->get();
+        $notes = DB::table('demo_note')->orderBy('id', 'desc')->get();
         return json($notes);
     }
 
@@ -39,12 +38,11 @@ class NotesController extends Controller
     function updateNote()
     {
         $request = new Request();
-        $insert = DB::table('demo_notes')->update([
-            "note" => $request->note,
-            "status" => $request->status,
-        ],
-            [
-                "id" => $request->id
+        $update = DB::table('demo_note')
+            ->where('id', $request->id)
+            ->update([
+                "note" => $request->note,
+                "status" => $request->status,
             ]);
 
         return json([
@@ -56,10 +54,9 @@ class NotesController extends Controller
     function clearCompletedNote()
     {
 
-        $insert = DB::table('demo_notes')->delete(
-            [
-                "status" => 'completed'
-            ]);
+        $insert = DB::table('demo_note')
+            ->where('status', 'completed')
+            ->delete();
 
         return json([
             "message" => "Cleared Successfully"
@@ -70,14 +67,16 @@ class NotesController extends Controller
     function deleteNote()
     {
         $request = new Request();
-        $insert = DB::table('demo_notes')->delete(
-            [
-                "id" => $request->id
-            ]);
+        $delete = DB::table('demo_note')
+            ->where("id", $request->id)
+            ->delete();
 
         return json([
-            "message" => "Deleted Successfully"
+            "message" => "Deleted Successfully ssssssssssss",
+            "delete" => $delete,
         ]);
+
+
     }
 
 

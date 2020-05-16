@@ -14,7 +14,8 @@
  *
  */
 
-$sidenav->main('DemoPlugin', ["icon" => "dashicons-admin-site",  "as" => 'NotesController@index', "position" => 500, "removeFirstSubmenu" => true], function ($route) {
-    $route->sub('DemoPlugin#/Dashboard', ["title" => "Dashboard", "as" => 'NotesController@index']);
-    $route->sub('DemoPlugin#/Notes', ["title" => "Notes", "as" => 'NotesController@index']);
+$sidenav->main('WeDevTest', ["icon" => "dashicons-admin-site",  "as" => 'NotesController@index',  "removeFirstSubmenu" => true], function ($route) {
+    $route->sub('WeDevTest#/Home', ["title" => "Home", "as" => 'NotesController@index']);
+    $route->sub('WeDevTest#/Notes', ["title" => "Notes", "as" => 'NotesController@index']);
 });
+

@@ -2,97 +2,29 @@
 
 namespace App\system\request;
 
-use App\system\core\base\RequestManager;
+use App\system\Validator;
+use PluginMaster\Request\Request as RequestManager;
 
-class Request implements RequestManager
+class Request extends RequestManager
 {
 
-    private $all = [];
-
-    function __construct()
-    {
-        $this->requestInit();
-    }
-
     /**
-     *
-     * set all requested data as this class property;
+     * can be used for rest route
+     * @param $rules | Array
+     * @return bool|void
      */
-    public function requestInit()
+    public function validate($rules)
     {
-        $this->postDataSet();
-        $this->ajaxDataSet();
-        $this->getDataSet();
-    }
+        $validate = Validator::make($this, $rules);
 
-    /**
-     *set server global data as this class property
-     */
-    public function postDataSet()
-    {
-        foreach ($_POST as $key => $value) {
-            $this->{$key} = $value;
-            $this->all[$key] = $value;
+        if ($validate->fails()) {
+            return json([
+                "message" => "Validation failed",
+                "errors" => $validate->errors()
+            ], 400);
         }
 
+        return true;
     }
-
-    /**
-     *set server global data as this class property
-     */
-    public function ajaxDataSet()
-    {
-        $inputJSON = file_get_contents('php://input');
-        if ($inputJSON) {
-            $input = json_decode($inputJSON, true);
-            foreach ($input as $key => $value) {
-                $this->{$key} = $value;
-                $this->all[$key] = $value;
-            }
-        }
-
-
-    }
-
-    /**
-     *set server global data as this class property
-     */
-    public function getDataSet()
-    {
-        foreach ($_GET as $key => $value) {
-            $this->{$key} = $value;
-            $this->all[$key] = $value;
-        }
-
-    }
-
-
-    /**
-     * set all requested data as this class property;
-     */
-    public function all()
-    {
-        return $this->all;
-    }
-
-    /**
-     * @param $property
-     * @return |null
-     */
-    public function get($property)
-    {
-        return isset($this->{$property}) ? $this->{$property} : null;
-    }
-
-
-    /**
-     * @param $property
-     * @return |null
-     */
-    public function __get($property)
-    {
-        return isset($this->{$property}) ? $this->{$property} : null;
-    }
-
 
 }
