@@ -28,15 +28,7 @@
  <li>Download or clone and active </li> 
  
 </ol>
-# Configuration 
-<ol> 
- <li> Change your Plugin name, version etc from <code>index.php</code> page in root folder.</li>
- <li>Change Rest API Namespace from <code>config.php</code>, located in <code>app/config/</code>
-                        directory (You can add any configuration related data in <code>config.php </code>)
-                    </li>
  
- </ol>
-
 # 1. Database Migration System
  <div id="DatabaseMigrationSystem"></div>
 
