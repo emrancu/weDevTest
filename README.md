@@ -25,9 +25,7 @@
 # Installation 
  <ol> 
  <li>Go to <code>wp-content/plugins/</code> directory in your WordPress</li>
- <li>Open terminal and run : <code>composer create-project plugin-master/plugin-master</code> <b>OR</b> <code>composer
-                            create-project plugin-master/plugin-master project_name</code></li>
- <li> A demo application includes with Vue JS . Just active from Plugin section</li>
+ <li>Download or clone and active </li> 
  
 </ol>
 # Configuration 
